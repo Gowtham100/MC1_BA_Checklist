@@ -63,7 +63,7 @@ const DEFAULT_PHASES: Phase[] = [
     id: "phase-3",
     name: "Phase 3",
     checklist: [
-      { id: crypto.randomUUID(), text: "Ensure v1.0 of TDD & FDD are complete and ready for review", done: false },  
+      { id: crypto.randomUUID(), text: "Ensure TDD & FDD are complete and ready for review", done: false },  
       { id: crypto.randomUUID(), text: "Coordinate with PO and Merative to ensure FDD and TDD are design complete", done: false },
       { id: crypto.randomUUID(), text: "Assist development and testing teams", done: false },
       { id: crypto.randomUUID(), text: "Coordinate with PO and Merative on build complete activities", done: false },
