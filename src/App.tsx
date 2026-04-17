@@ -50,6 +50,7 @@ const DEFAULT_PHASES: Phase[] = [
     id: "phase-2",
     name: "Phase 2",
     checklist: [
+        { id: crypto.randomUUID(), text: "Create & maintain any mapping documents in sharepoint", done: false },
       { id: crypto.randomUUID(), text: "Conduct JAD sessions (initial and follow-ups if needed)", done: false },
       { id: crypto.randomUUID(), text: "Ensure feedback tracker is closed within 48 hours and provide inputs", done: false },
       { id: crypto.randomUUID(), text: "Set and conduct meetings with BPDT (as needed)", done: false },
