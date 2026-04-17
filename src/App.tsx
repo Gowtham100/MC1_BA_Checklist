@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "./App.css";
+import { supabase } from "./supabase";
 
 type ChecklistItem = {
   id: string;
@@ -21,7 +22,13 @@ type FeatureCard = {
   createdAt: string;
 };
 
-const API_BASE_URL = "http://localhost:3001";
+type FeatureRow = {
+  id: string;
+  number: string;
+  name: string;
+  phases_json: Phase[];
+  created_at: string;
+};
 
 const DEFAULT_PHASES: Phase[] = [
   {
@@ -89,55 +96,63 @@ function getProgress(phases: Phase[]) {
   return { total, completed, percent };
 }
 
-async function fetchFeatures(): Promise<FeatureCard[]> {
-  const response = await fetch(`${API_BASE_URL}/api/features`);
+function mapRowToFeature(row: FeatureRow): FeatureCard {
+  return {
+    id: row.id,
+    number: row.number,
+    name: row.name,
+    phases: row.phases_json,
+    createdAt: row.created_at,
+  };
+}
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Failed to fetch features: ${response.status} ${text}`);
+async function fetchFeatures(): Promise<FeatureCard[]> {
+  const { data, error } = await supabase
+    .from("features")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw error;
   }
 
-  return response.json();
+  return (data as FeatureRow[]).map(mapRowToFeature);
 }
 
 async function createFeature(feature: FeatureCard) {
-  const response = await fetch(`${API_BASE_URL}/api/features`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(feature),
+  const { error } = await supabase.from("features").insert({
+    id: feature.id,
+    number: feature.number,
+    name: feature.name,
+    phases_json: feature.phases,
+    created_at: feature.createdAt,
   });
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Failed to create feature: ${response.status} ${text}`);
+  if (error) {
+    throw error;
   }
 }
 
 async function updateFeature(feature: FeatureCard) {
-  const response = await fetch(`${API_BASE_URL}/api/features/${feature.id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(feature),
-  });
+  const { error } = await supabase
+    .from("features")
+    .update({
+      number: feature.number,
+      name: feature.name,
+      phases_json: feature.phases,
+    })
+    .eq("id", feature.id);
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Failed to update feature: ${response.status} ${text}`);
+  if (error) {
+    throw error;
   }
 }
 
 async function deleteFeatureFromDb(featureId: string) {
-  const response = await fetch(`${API_BASE_URL}/api/features/${featureId}`, {
-    method: "DELETE",
-  });
+  const { error } = await supabase.from("features").delete().eq("id", featureId);
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Failed to delete feature: ${response.status} ${text}`);
+  if (error) {
+    throw error;
   }
 }
 
@@ -150,7 +165,7 @@ function App() {
   useEffect(() => {
     fetchFeatures()
       .then(setFeatures)
-      .catch((error) => console.error(error));
+      .catch((error) => console.error("Failed to fetch features:", error));
   }, []);
 
   const selectedFeature = useMemo(() => {
@@ -176,7 +191,7 @@ function App() {
       setFeatureNumber("");
       setFeatureName("");
     } catch (error) {
-      console.error(error);
+      console.error("Failed to create feature:", error);
     }
   }
 
@@ -189,7 +204,7 @@ function App() {
         setSelectedFeatureId(null);
       }
     } catch (error) {
-      console.error(error);
+      console.error("Failed to delete feature:", error);
     }
   }
 
@@ -219,7 +234,7 @@ function App() {
         )
       );
     } catch (error) {
-      console.error(error);
+      console.error("Failed to update feature:", error);
     }
   }
 

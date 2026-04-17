@@ -17,6 +17,7 @@
     "vite": "^8.0.4"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.103.3",
     "@tailwindcss/vite": "^4.2.2",
     "better-sqlite3": "^12.9.0",
     "cors": "^2.8.6",
