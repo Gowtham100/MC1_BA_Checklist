@@ -8,10 +8,23 @@ type ChecklistItem = {
   done: boolean;
 };
 
+type PhaseSection = {
+  id: string;
+  title: string;
+  checklist: ChecklistItem[];
+};
+
 type Phase = {
   id: string;
   name: string;
-  checklist: ChecklistItem[];
+  sections: PhaseSection[];
+};
+
+type LegacyPhase = {
+  id: string;
+  name: string;
+  checklist?: ChecklistItem[];
+  sections?: PhaseSection[];
 };
 
 type FeatureCard = {
@@ -26,7 +39,7 @@ type FeatureRow = {
   id: string;
   number: string;
   name: string;
-  phases_json: Phase[];
+  phases_json: LegacyPhase[] | null;
   created_at: string;
 };
 
@@ -34,49 +47,192 @@ const DEFAULT_PHASES: Phase[] = [
   {
     id: "phase-1",
     name: "Phase 1",
-    checklist: [
-      { id: crypto.randomUUID(), text: "Start Teams group chat with BPDT for feature and provide a short blurb", done: false },
-      { id: crypto.randomUUID(), text: "Create a Teams design + content specific group chat with product team, designers & BAs", done: false },
-      { id: crypto.randomUUID(), text: "Create a Miro flow for the feature (internal use) and send diagram to BPDT", done: false },
-      { id: crypto.randomUUID(), text: "Create v0.1 of TDD", done: false },
-      { id: crypto.randomUUID(), text: "Create v0.1 of FDD", done: false },
-      { id: crypto.randomUUID(), text: "Ensure user stories are created with business requirements", done: false },
-      { id: crypto.randomUUID(), text: "Ensure test stories are created with acceptance criteria", done: false },
-      { id: crypto.randomUUID(), text: "Run internal alignment meeting with product team and business advisor", done: false },
-      { id: crypto.randomUUID(), text: "Set pre-JAD session for internal alignment", done: false },
-      { id: crypto.randomUUID(), text: "Set JAD session and prepare feedback tracker sheet", done: false },
-      { id: crypto.randomUUID(), text: "Set meeting with content design team to ensure Figma work has begun", done: false },
+    sections: [
+      {
+        id: "phase-1-kickoff",
+        title: "Kickoff & Communication",
+        checklist: [
+          {
+            id: crypto.randomUUID(),
+            text: "Start Teams group chat with BPDT for feature and provide a short blurb",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Create a Teams design + content specific group chat with product team, designers & BAs",
+            done: false,
+          },
+        ],
+      },
+      {
+        id: "phase-1-docs",
+        title: "Documentation Setup",
+        checklist: [
+          {
+            id: crypto.randomUUID(),
+            text: "Create a Miro flow for the feature (internal use) and send diagram to BPDT",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Create v0.1 of TDD",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Create v0.1 of FDD",
+            done: false,
+          },
+        ],
+      },
+      {
+        id: "phase-1-stories",
+        title: "Story Readiness",
+        checklist: [
+          {
+            id: crypto.randomUUID(),
+            text: "Ensure user stories are created with business requirements",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Ensure test stories are created with acceptance criteria",
+            done: false,
+          },
+        ],
+      },
+      {
+        id: "phase-1-meetings",
+        title: "Alignment & Meetings",
+        checklist: [
+          {
+            id: crypto.randomUUID(),
+            text: "Run internal alignment meeting with product team and business advisor",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Set pre-JAD session for internal alignment",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Set JAD session and prepare feedback tracker sheet",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Set meeting with content design team to ensure Figma work has begun",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Set meeting for walkthrough with BPDT",
+            done: false,
+          },
+        ],
+      },
     ],
   },
   {
     id: "phase-2",
     name: "Phase 2",
-    checklist: [
-        { id: crypto.randomUUID(), text: "Create & maintain any mapping documents in sharepoint", done: false },
-      { id: crypto.randomUUID(), text: "Conduct JAD sessions (initial and follow-ups if needed)", done: false },
-      { id: crypto.randomUUID(), text: "Ensure feedback tracker is closed within 48 hours and provide inputs", done: false },
-      { id: crypto.randomUUID(), text: "Set and conduct meetings with BPDT (as needed)", done: false },
-      { id: crypto.randomUUID(), text: "Create v0.2 of TDD", done: false },
-      { id: crypto.randomUUID(), text: "Create v0.2 of FDD", done: false },
-      { id: crypto.randomUUID(), text: "Ensure completion and approval of Figma and content work", done: false },
+    sections: [
+      {
+        id: "phase-2-execution",
+        title: "Execution & Follow-through",
+        checklist: [
+          {
+            id: crypto.randomUUID(),
+            text: "Create & maintain any mapping documents in SharePoint",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Conduct JAD sessions (initial and follow-ups if needed)",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Ensure feedback tracker is closed within 48 hours and provide inputs",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Set and conduct meetings with BPDT (as needed)",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Create v0.2 of TDD",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Create v0.2 of FDD",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Ensure completion and approval of Figma and content work",
+            done: false,
+          },
+        ],
+      },
     ],
   },
   {
     id: "phase-3",
     name: "Phase 3",
-    checklist: [
-      { id: crypto.randomUUID(), text: "Ensure TDD & FDD are complete and ready for review", done: false },  
-      { id: crypto.randomUUID(), text: "Coordinate with PO and Merative to ensure FDD and TDD are design complete", done: false },
-      { id: crypto.randomUUID(), text: "Assist development and testing teams", done: false },
-      { id: crypto.randomUUID(), text: "Coordinate with PO and Merative on build complete activities", done: false },
+    sections: [
+      {
+        id: "phase-3-build",
+        title: "Design Complete & Build Support",
+        checklist: [
+          {
+            id: crypto.randomUUID(),
+            text: "Ensure TDD & FDD are complete and ready for review",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Coordinate with PO and Merative to ensure FDD and TDD are design complete",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Assist development and testing teams",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Coordinate with PO and Merative on build complete activities",
+            done: false,
+          },
+        ],
+      },
     ],
   },
   {
     id: "phase-4",
     name: "Phase 4",
-    checklist: [
-      { id: crypto.randomUUID(), text: "Assist testing team during validation and completion", done: false },
-      { id: crypto.randomUUID(), text: "Ensure all pending BA activities are completed and approved for design and build completion", done: false },
+    sections: [
+      {
+        id: "phase-4-closeout",
+        title: "Validation & Closeout",
+        checklist: [
+          {
+            id: crypto.randomUUID(),
+            text: "Assist testing team during validation and completion",
+            done: false,
+          },
+          {
+            id: crypto.randomUUID(),
+            text: "Ensure all pending BA activities are completed and approved for design and build completion",
+            done: false,
+          },
+        ],
+      },
     ],
   },
 ];
@@ -84,15 +240,111 @@ const DEFAULT_PHASES: Phase[] = [
 function cloneDefaultPhases(): Phase[] {
   return DEFAULT_PHASES.map((phase) => ({
     ...phase,
-    checklist: phase.checklist.map((item) => ({
-      ...item,
-      id: crypto.randomUUID(),
+    sections: phase.sections.map((section) => ({
+      ...section,
+      checklist: section.checklist.map((item) => ({
+        ...item,
+        id: crypto.randomUUID(),
+      })),
     })),
   }));
 }
 
-function getProgress(phases: Phase[]) {
-  const items = phases.flatMap((phase) => phase.checklist);
+function normalizeChecklist(items: unknown): ChecklistItem[] {
+  if (!Array.isArray(items)) return [];
+
+  return items.map((item, index) => {
+    const safeItem = item as Partial<ChecklistItem>;
+    return {
+      id:
+        typeof safeItem.id === "string" && safeItem.id.trim()
+          ? safeItem.id
+          : crypto.randomUUID(),
+      text:
+        typeof safeItem.text === "string" && safeItem.text.trim()
+          ? safeItem.text
+          : `Task ${index + 1}`,
+      done: Boolean(safeItem.done),
+    };
+  });
+}
+
+function normalizePhases(phases: LegacyPhase[] | null | undefined): Phase[] {
+  if (!Array.isArray(phases)) return [];
+
+  return phases.map((phase, phaseIndex) => {
+    const phaseId =
+      typeof phase?.id === "string" && phase.id.trim()
+        ? phase.id
+        : `phase-${phaseIndex + 1}`;
+
+    const phaseName =
+      typeof phase?.name === "string" && phase.name.trim()
+        ? phase.name
+        : `Phase ${phaseIndex + 1}`;
+
+    if (Array.isArray(phase?.sections)) {
+      return {
+        id: phaseId,
+        name: phaseName,
+        sections: phase.sections.map((section, sectionIndex) => ({
+          id:
+            typeof section?.id === "string" && section.id.trim()
+              ? section.id
+              : `${phaseId}-section-${sectionIndex + 1}`,
+          title:
+            typeof section?.title === "string" && section.title.trim()
+              ? section.title
+              : `Section ${sectionIndex + 1}`,
+          checklist: normalizeChecklist(section?.checklist),
+        })),
+      };
+    }
+
+    return {
+      id: phaseId,
+      name: phaseName,
+      sections: [
+        {
+          id: `${phaseId}-default-section`,
+          title: "Tasks",
+          checklist: normalizeChecklist(phase?.checklist),
+        },
+      ],
+    };
+  });
+}
+
+function getProgress(phases: Phase[] | null | undefined) {
+  const safePhases = Array.isArray(phases) ? phases : [];
+
+  const items = safePhases.flatMap((phase) =>
+    (Array.isArray(phase.sections) ? phase.sections : []).flatMap((section) =>
+      Array.isArray(section.checklist) ? section.checklist : []
+    )
+  );
+
+  const total = items.length;
+  const completed = items.filter((item) => item.done).length;
+  const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
+
+  return { total, completed, percent };
+}
+
+function getSectionProgress(section: PhaseSection) {
+  const items = Array.isArray(section.checklist) ? section.checklist : [];
+  const total = items.length;
+  const completed = items.filter((item) => item.done).length;
+  const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
+
+  return { total, completed, percent };
+}
+
+function getPhaseProgress(phase: Phase) {
+  const items = (Array.isArray(phase.sections) ? phase.sections : []).flatMap(
+    (section) => (Array.isArray(section.checklist) ? section.checklist : [])
+  );
+
   const total = items.length;
   const completed = items.filter((item) => item.done).length;
   const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
@@ -105,7 +357,7 @@ function mapRowToFeature(row: FeatureRow): FeatureCard {
     id: row.id,
     number: row.number,
     name: row.name,
-    phases: row.phases_json,
+    phases: normalizePhases(row.phases_json),
     createdAt: row.created_at,
   };
 }
@@ -120,7 +372,7 @@ async function fetchFeatures(): Promise<FeatureCard[]> {
     throw error;
   }
 
-  return (data as FeatureRow[]).map(mapRowToFeature);
+  return ((data as FeatureRow[]) || []).map(mapRowToFeature);
 }
 
 async function createFeature(feature: FeatureCard) {
@@ -212,7 +464,11 @@ function App() {
     }
   }
 
-  async function handleToggleChecklistItem(phaseId: string, itemId: string) {
+  async function handleToggleChecklistItem(
+    phaseId: string,
+    sectionId: string,
+    itemId: string
+  ) {
     if (!selectedFeature) return;
 
     const updatedFeature: FeatureCard = {
@@ -222,16 +478,22 @@ function App() {
 
         return {
           ...phase,
-          checklist: phase.checklist.map((item) =>
-            item.id === itemId ? { ...item, done: !item.done } : item
-          ),
+          sections: phase.sections.map((section) => {
+            if (section.id !== sectionId) return section;
+
+            return {
+              ...section,
+              checklist: section.checklist.map((item) =>
+                item.id === itemId ? { ...item, done: !item.done } : item
+              ),
+            };
+          }),
         };
       }),
     };
 
     try {
       await updateFeature(updatedFeature);
-
       setFeatures((prev) =>
         prev.map((feature) =>
           feature.id === updatedFeature.id ? updatedFeature : feature
@@ -250,7 +512,10 @@ function App() {
         <div className="page-container">
           <div className="top-bar">
             <div>
-              <button className="secondary-button" onClick={() => setSelectedFeatureId(null)}>
+              <button
+                className="secondary-button"
+                onClick={() => setSelectedFeatureId(null)}
+              >
                 ← Back
               </button>
               <h1 className="page-title">
@@ -268,35 +533,82 @@ function App() {
                 <span>{progress.percent}%</span>
               </div>
               <div className="progress-bar">
-                <div className="progress-bar-fill" style={{ width: `${progress.percent}%` }} />
+                <div
+                  className="progress-bar-fill"
+                  style={{ width: `${progress.percent}%` }}
+                />
               </div>
             </div>
           </div>
 
           <div className="phase-grid">
-            {selectedFeature.phases.map((phase) => (
-              <div className="card" key={phase.id}>
-                <div className="card-header">
-                  <h2>{phase.name}</h2>
-                  <p>
-                    {phase.checklist.filter((item) => item.done).length} of {phase.checklist.length} done
-                  </p>
-                </div>
+            {selectedFeature.phases.map((phase) => {
+              const phaseProgress = getPhaseProgress(phase);
 
-                <div className="checklist-list">
-                  {phase.checklist.map((item) => (
-                    <label className={`checklist-item ${item.done ? "done" : ""}`} key={item.id}>
-                      <input
-                        type="checkbox"
-                        checked={item.done}
-                        onChange={() => handleToggleChecklistItem(phase.id, item.id)}
-                      />
-                      <span>{item.text}</span>
-                    </label>
-                  ))}
+              return (
+                <div className="card phase-card" key={phase.id}>
+                  <div className="card-header phase-card-header">
+                    <div>
+                      <h2>{phase.name}</h2>
+                      <p>
+                        {phaseProgress.completed} of {phaseProgress.total} done
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="phase-sections">
+                    {phase.sections.map((section) => {
+                      const sectionProgress = getSectionProgress(section);
+
+                      return (
+                        <div className="section-card" key={section.id}>
+                          <div className="section-header">
+                            <div>
+                              <h3>{section.title}</h3>
+                              <p>
+                                {sectionProgress.completed} / {sectionProgress.total} complete
+                              </p>
+                            </div>
+                            <span className="section-pill">
+                              {sectionProgress.percent}%
+                            </span>
+                          </div>
+
+                          <div className="mini-progress-bar">
+                            <div
+                              className="mini-progress-bar-fill"
+                              style={{ width: `${sectionProgress.percent}%` }}
+                            />
+                          </div>
+
+                          <div className="checklist-list">
+                            {section.checklist.map((item) => (
+                              <label
+                                className={`checklist-item ${item.done ? "done" : ""}`}
+                                key={item.id}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={item.done}
+                                  onChange={() =>
+                                    handleToggleChecklistItem(
+                                      phase.id,
+                                      section.id,
+                                      item.id
+                                    )
+                                  }
+                                />
+                                <span>{item.text}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
@@ -360,7 +672,10 @@ function App() {
                       <p className="feature-number">Feature #{feature.number}</p>
                       <h2>{feature.name}</h2>
                     </div>
-                    <button className="icon-button" onClick={() => handleDeleteFeature(feature.id)}>
+                    <button
+                      className="icon-button"
+                      onClick={() => handleDeleteFeature(feature.id)}
+                    >
                       Delete
                     </button>
                   </div>
@@ -371,11 +686,32 @@ function App() {
                       <span>{progress.percent}%</span>
                     </div>
                     <div className="progress-bar">
-                      <div className="progress-bar-fill" style={{ width: `${progress.percent}%` }} />
+                      <div
+                        className="progress-bar-fill"
+                        style={{ width: `${progress.percent}%` }}
+                      />
                     </div>
                   </div>
 
-                  <button className="primary-button full-width" onClick={() => setSelectedFeatureId(feature.id)}>
+                  <div className="phase-summary-list">
+                    {feature.phases.map((phase) => {
+                      const phaseProgress = getPhaseProgress(phase);
+
+                      return (
+                        <div className="phase-summary-row" key={phase.id}>
+                          <span>{phase.name}</span>
+                          <span>
+                            {phaseProgress.completed}/{phaseProgress.total}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <button
+                    className="primary-button full-width"
+                    onClick={() => setSelectedFeatureId(feature.id)}
+                  >
                     Open Feature
                   </button>
                 </div>
