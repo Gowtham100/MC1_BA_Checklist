@@ -231,6 +231,11 @@ const DEFAULT_PHASES: Phase[] = [
             text: "Ensure all pending BA activities are completed and approved for design and build completion",
             done: false,
           },
+          {
+            id: crypto.randomUUID(),
+            text: "Complete KT Presentation with rest of ESDC",
+            done: false,
+          },
         ],
       },
     ],
