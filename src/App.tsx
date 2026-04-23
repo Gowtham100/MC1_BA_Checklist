@@ -30,7 +30,6 @@ type LegacyPhase = {
 type FeatureCard = {
   id: string;
   number: string;
-  name: string;
   phases: Phase[];
   createdAt: string;
 };
@@ -38,7 +37,7 @@ type FeatureCard = {
 type FeatureRow = {
   id: string;
   number: string;
-  name: string;
+  name: string | null;
   phases_json: LegacyPhase[] | null;
   created_at: string;
 };
@@ -361,7 +360,6 @@ function mapRowToFeature(row: FeatureRow): FeatureCard {
   return {
     id: row.id,
     number: row.number,
-    name: row.name,
     phases: normalizePhases(row.phases_json),
     createdAt: row.created_at,
   };
@@ -384,7 +382,7 @@ async function createFeature(feature: FeatureCard) {
   const { error } = await supabase.from("features").insert({
     id: feature.id,
     number: feature.number,
-    name: feature.name,
+    name: null,
     phases_json: feature.phases,
     created_at: feature.createdAt,
   });
@@ -399,7 +397,7 @@ async function updateFeature(feature: FeatureCard) {
     .from("features")
     .update({
       number: feature.number,
-      name: feature.name,
+      name: null,
       phases_json: feature.phases,
     })
     .eq("id", feature.id);
@@ -421,7 +419,6 @@ function App() {
   const [features, setFeatures] = useState<FeatureCard[]>([]);
   const [selectedFeatureId, setSelectedFeatureId] = useState<string | null>(null);
   const [featureNumber, setFeatureNumber] = useState("");
-  const [featureName, setFeatureName] = useState("");
 
   useEffect(() => {
     fetchFeatures()
@@ -434,14 +431,13 @@ function App() {
   }, [features, selectedFeatureId]);
 
   async function handleAddFeature() {
-    if (!featureNumber.trim() || !featureName.trim()) {
+    if (!featureNumber.trim()) {
       return;
     }
 
     const newFeature: FeatureCard = {
       id: crypto.randomUUID(),
       number: featureNumber.trim(),
-      name: featureName.trim(),
       phases: cloneDefaultPhases(),
       createdAt: new Date().toISOString(),
     };
@@ -450,7 +446,6 @@ function App() {
       await createFeature(newFeature);
       setFeatures((prev) => [newFeature, ...prev]);
       setFeatureNumber("");
-      setFeatureName("");
     } catch (error) {
       console.error("Failed to create feature:", error);
     }
@@ -523,9 +518,7 @@ function App() {
               >
                 ← Back
               </button>
-              <h1 className="page-title">
-                {selectedFeature.number} - {selectedFeature.name}
-              </h1>
+              <h1 className="page-title">{selectedFeature.number}</h1>
               <p className="page-subtitle">Track progress across all 4 phases.</p>
             </div>
 
@@ -643,16 +636,6 @@ function App() {
               />
             </div>
 
-            <div className="field-group">
-              <label>Product Feature Name</label>
-              <input
-                type="text"
-                value={featureName}
-                onChange={(e) => setFeatureName(e.target.value)}
-                placeholder="Example: Claims status alert updates"
-              />
-            </div>
-
             <div className="button-row">
               <button className="primary-button" onClick={handleAddFeature}>
                 Add Feature
@@ -674,8 +657,7 @@ function App() {
                 <div className="card feature-card" key={feature.id}>
                   <div className="feature-card-top">
                     <div>
-                      <p className="feature-number">Feature #{feature.number}</p>
-                      <h2>{feature.name}</h2>
+                      <p className="feature-number">{feature.number}</p>
                     </div>
                     <button
                       className="icon-button"
